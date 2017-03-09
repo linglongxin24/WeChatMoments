@@ -8,8 +8,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,9 +22,7 @@ import cn.bluemobi.dylan.wechatmoments.R;
 import cn.bluemobi.dylan.wechatmoments.entity.TweetsEntity;
 
 /**
- * 描述:
- * 作者：HMY
- * 时间：2016/5/10
+ * Created by yuandl on 2017-03-08.
  */
 public class NineGridLayout extends ViewGroup {
     private String TAG = "NineGridLayout";
@@ -260,95 +260,52 @@ public class NineGridLayout extends ViewGroup {
      * @return true 代表按照九宫格默认大小显示，false 代表按照自定义宽高显示
      */
 
-    protected boolean displayOneImage(final ImageView imageView, String url, final int parentWidth) {
-        Glide.with(mContext).load(url).asBitmap().placeholder(R.mipmap.image_default).error(R.mipmap.image_default).into(imageView);
-//       Glide.with(mContext).load(url).asBitmap().placeholder(R.mipmap.image_default).error(R.mipmap.image_default).into(new SimpleTarget<Bitmap>() {
-//            @Override
-//            public void onResourceReady(Bitmap bitmap, GlideAnimation<? super Bitmap> glideAnimation) {
-//                int w = bitmap.getWidth();
-//                int h = bitmap.getHeight();
-//
-//                int newW;
-//                int newH;
-//                if (h > w * MAX_W_H_RATIO) {//h:w = 5:3
-//                    newW = parentWidth / 2;
-//                    newH = newW * 5 / 3;
-//                } else if (h < w) {//h:w = 2:3
-//                    newW = parentWidth * 2 / 3;
-//                    newH = newW * 2 / 3;
-//                } else {//newH:h = newW :w
-//                    newW = parentWidth / 2;
-//                    newH = h * newW / w;
-//                }
-//                setOneImageLayoutParams(imageView, newW, newH);
-//                imageView.setImageBitmap(bitmap);
-//            }
-//        });
-//Glide.with(mContext).load(url).listener(new RequestListener<String, GlideDrawable>() {
-//    @Override
-//    public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
-//        return false;
-//    }
-//
-//    @Override
-//    public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
-//
-//        return true;
-//    }
-//}).into(imageView);
-//        ImageLoaderUtil.displayImage(mContext, imageView, url, ImageLoaderUtil.getPhotoImageOption(), new ImageLoadingListener() {
-//            @Override
-//            public void onLoadingStarted(String imageUri, View view) {
-//
-//            }
-//
-//            @Override
-//            public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
-//
-//            }
-//
-//            @Override
-//            public void onLoadingComplete(String imageUri, View view, Bitmap bitmap) {
-//                int w = bitmap.getWidth();
-//                int h = bitmap.getHeight();
-//
-//                int newW;
-//                int newH;
-//                if (h > w * MAX_W_H_RATIO) {//h:w = 5:3
-//                    newW = parentWidth / 2;
-//                    newH = newW * 5 / 3;
-//                } else if (h < w) {//h:w = 2:3
-//                    newW = parentWidth * 2 / 3;
-//                    newH = newW * 2 / 3;
-//                } else {//newH:h = newW :w
-//                    newW = parentWidth / 2;
-//                    newH = h * newW / w;
-//                }
-//                setOneImageLayoutParams(imageView, newW, newH);
-//            }
-//
-//            @Override
-//            public void onLoadingCancelled(String imageUri, View view) {
-//
-//            }
-//        });
+    protected boolean displayOneImage(final ImageView imageView, final String url, final int parentWidth) {
+        Glide.with(mContext)
+                .load(url)
+                .centerCrop()
+                .placeholder(R.mipmap.image_default)
+                .error(R.mipmap.image_default)
+                .dontAnimate()
+                .into(new GlideDrawableImageViewTarget(imageView) {
+                    @Override
+                    public void onResourceReady(GlideDrawable drawable, GlideAnimation anim) {
+                        super.onResourceReady(drawable, anim);
+                        int w = drawable.getIntrinsicWidth();
+                        int h = drawable.getIntrinsicHeight();
+
+                        int newW;
+                        int newH;
+                        if (h > w * MAX_W_H_RATIO) {//h:w = 5:3
+                            newW = parentWidth / 2;
+                            newH = newW * 5 / 3;
+                        } else if (h < w) {//h:w = 2:3
+                            newW = parentWidth * 2 / 3;
+                            newH = newW * 2 / 3;
+                        } else {//newH:h = newW :w
+                            newW = parentWidth / 2;
+                            newH = h * newW / w;
+                        }
+                        setOneImageLayoutParams(imageView, newW, newH);
+                        //在这里添加一些图片加载完成的操作
+                    }
+                });
         return false;
     }
 
     protected void displayImage(ImageView imageView, String url) {
         Glide.with(mContext).load(url).placeholder(R.mipmap.image_default).error(R.mipmap.image_default).into(imageView);
-//        ImageLoaderUtil.getImageLoader(mContext).displayImage(url, imageView, ImageLoaderUtil.getPhotoImageOption());
     }
 
     protected void onClickImage(int position, String url, List<TweetsEntity.ImagesEntity> urlList) {
-        String[] urls=new String[urlList.size()];
-        for(int i = 0; i <urlList.size() ; i++) {
-            urls[i]=urlList.get(i).getUrl();
+        String[] urls = new String[urlList.size()];
+        for (int i = 0; i < urlList.size(); i++) {
+            urls[i] = urlList.get(i).getUrl();
         }
         Intent intent = new Intent(mContext, ImagePagerActivity.class);
         String[] arr = new String[urlList.size()];
         intent.putExtra(ImagePagerActivity.EXTRA_IMAGE_URLS, arr);
-        intent.putExtra(ImagePagerActivity.EXTRA_IMAGE_INDEX,position);
+        intent.putExtra(ImagePagerActivity.EXTRA_IMAGE_INDEX, position);
         mContext.startActivity(intent);
     }
 }

@@ -7,25 +7,23 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.model.GlideUrl;
 import com.google.gson.Gson;
 import com.lcodecore.tkrefreshlayout.Footer.LoadingView;
 import com.lcodecore.tkrefreshlayout.RefreshListenerAdapter;
 import com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout;
 import com.lcodecore.tkrefreshlayout.header.progresslayout.ProgressLayout;
-import com.zhy.adapter.abslistview.CommonAdapter;
 
-import java.io.InputStream;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import cn.bluemobi.dylan.wechatmoments.adapter.MyAdapter;
 import cn.bluemobi.dylan.wechatmoments.entity.TweetsEntity;
-import cn.bluemobi.dylan.wechatmoments.glide.OkHttpUrlLoader;
+import cn.bluemobi.dylan.wechatmoments.entity.UserEntity;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
@@ -38,30 +36,75 @@ import rx.schedulers.Schedulers;
 import static cn.bluemobi.dylan.wechatmoments.ApiService.baseUrl;
 
 public class MainActivity extends AppCompatActivity {
-    private final String TAG = "HTTP";
+    /**
+     * HTTP请求LOG
+     */
+    private final String TAG = "OKHTTP";
+    /**
+     * 朋友圈数据列表
+     */
     private ListView lv;
+    /**
+     * 用户头像
+     */
+    private ImageView iv_head;
+    /**
+     * 朋友圈列表数据
+     */
     private List<TweetsEntity> entityList;
-    private CommonAdapter<TweetsEntity> adapter;
-    private Context mContext;
-    private TwinklingRefreshLayout refreshLayout;
-    private int pageNo = 1;
-    private int pageSize = 5;
-    private int pageCount = 0;
+    /**
+     * 朋友圈列表适配器
+     */
     private MyAdapter myAdapter;
-    private Retrofit retrofit;
+    /**
+     * 上下文
+     */
+    private Context mContext;
+    /**
+     * 下拉刷新上拉加载
+     */
+    private TwinklingRefreshLayout refreshLayout;
+    /**
+     * 第几页
+     */
+    private int pageNo = 1;
+    /**
+     * 每页数量
+     */
+    private int pageSize = 5;
+    /**
+     * 总页数
+     */
+    private int pageCount = 0;
+    /**
+     * 服务器接口API
+     */
+    private ApiService apiService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mContext = this;
-        initImageLoader();
-        initRetrofit();
         initView();
+        initRetrofit();
         initAdapter();
         initRefreshView();
     }
 
+    /**
+     * 初始化view
+     */
+    private void initView() {
+        lv = (ListView) findViewById(R.id.lv);
+        View headView = LayoutInflater.from(mContext).inflate(R.layout.headview, null);
+        iv_head = (ImageView) headView.findViewById(R.id.iv_head);
+        lv.addHeaderView(headView);
+    }
+
+    /**
+     * 初始化网络请求
+     */
     private void initRetrofit() {
         OkHttpClient okHttpClient = new OkHttpClient.Builder().connectTimeout(1, TimeUnit.MINUTES).addInterceptor(new HttpLoggingInterceptor(new HttpLoggingInterceptor.Logger() {
             @Override
@@ -70,19 +113,17 @@ public class MainActivity extends AppCompatActivity {
             }
 
         }).setLevel(HttpLoggingInterceptor.Level.BODY)).build();
-        retrofit = new Retrofit.Builder()
+
+        Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(baseUrl)
                 .addConverterFactory(GsonConverterFactory.create(new Gson()))
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .client(okHttpClient)
                 .build();
+
+        apiService = retrofit.create(ApiService.class);
     }
 
-    private void initView() {
-        lv = (ListView) findViewById(R.id.lv);
-        View headView = LayoutInflater.from(mContext).inflate(R.layout.headview, null);
-        lv.addHeaderView(headView);
-    }
 
     /**
      * 初始化适配器
@@ -113,6 +154,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onRefresh(final TwinklingRefreshLayout refreshLayout) {
                 pageNo = 1;
+                getUserInfo();
                 loadData();
             }
 
@@ -134,8 +176,29 @@ public class MainActivity extends AppCompatActivity {
         refreshLayout.finishLoadmore();
     }
 
-    private void initImageLoader() {
-        Glide.get(this).register(GlideUrl.class, InputStream.class, new OkHttpUrlLoader.Factory());
+    /**
+     * 获取用户信息
+     */
+    private void getUserInfo() {
+        apiService.getUserInfo()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<UserEntity>() {
+                    @Override
+                    public void onCompleted() {
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        e.printStackTrace();
+                    }
+
+                    @Override
+                    public void onNext(UserEntity userEntity) {
+                        Glide.with(mContext).load(userEntity.getAvatar()).placeholder(R.mipmap.ic_launcher).error(R.mipmap.ic_launcher).into(iv_head);
+                    }
+
+                });
     }
 
     /**
@@ -143,7 +206,6 @@ public class MainActivity extends AppCompatActivity {
      */
     private void getTweets() {
 
-        ApiService apiService = retrofit.create(ApiService.class);
         apiService.getTweets()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

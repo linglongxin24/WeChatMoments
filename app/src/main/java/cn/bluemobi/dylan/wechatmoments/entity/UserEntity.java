@@ -3,6 +3,7 @@ package cn.bluemobi.dylan.wechatmoments.entity;
 import com.google.gson.annotations.SerializedName;
 
 /**
+ * 用户信息实体
  * Created by yuandl on 2017-03-09.
  */
 

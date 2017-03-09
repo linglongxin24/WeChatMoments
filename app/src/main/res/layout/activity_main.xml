@@ -11,10 +11,11 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/rg"
         android:overScrollMode="never"
-        app:tr_head_height="100dp"
-        app:tr_wave_height="150dp">
+        app:tr_head_height="50dp"
+        app:tr_wave_height="100dp">
     <ListView
         android:id="@+id/lv"
+        android:overScrollMode="never"
         android:layout_width="match_parent"
         android:layout_height="match_parent"></ListView>
     </com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout>

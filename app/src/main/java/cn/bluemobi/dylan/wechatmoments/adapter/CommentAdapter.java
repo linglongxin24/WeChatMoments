@@ -13,6 +13,7 @@ import cn.bluemobi.dylan.wechatmoments.R;
 import cn.bluemobi.dylan.wechatmoments.entity.TweetsEntity;
 
 /**
+ * 评论列表适配器
  * Created by yuandl on 2017-03-09.
  */
 
@@ -46,10 +47,10 @@ public class CommentAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-       ViewHolder viewHolder;
+        ViewHolder viewHolder;
         if (convertView == null) {
             convertView = inflater.inflate(R.layout.item_commit, null);
-            viewHolder=new ViewHolder(convertView);
+            viewHolder = new ViewHolder(convertView);
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();

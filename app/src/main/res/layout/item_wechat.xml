@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal"
     android:background="@color/white"
+    android:orientation="horizontal"
     android:padding="10dp">
 
     <ImageView
+        android:id="@+id/iv_head"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:id="@+id/iv_head"
+        android:scaleType="centerCrop"
         android:src="@mipmap/ic_launcher" />
 
     <LinearLayout
@@ -19,29 +21,39 @@
         android:orientation="vertical">
 
         <TextView
+            android:id="@+id/tv_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="杰伦"
-            android:id="@+id/tv_name"
+            android:textColor="@color/colorPrimary"
             android:textSize="14sp"
-            android:textStyle="bold"
-            android:textColor="@color/colorPrimary" />
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/tv_content"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            android:textSize="14sp"
+            android:text=""
+            android:maxLines="6"
             android:textColor="@color/black"
-            android:text="翻着我们的照片，想念若隐若现，去年的冬天，我们笑得很甜......\n—— 哎哟，不错哦!" />
-
-        <cn.bluemobi.dylan.wechatmoments.view.NineGridLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:textSize="14sp" />
+        <TextView
+            android:id="@+id/tv_more"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="全文"
+            android:visibility="gone"
+            android:textColor="@color/colorPrimary"
+            android:textSize="14sp"
+            android:maxLines="6" />
+        <cn.bluemobi.dylan.wechatmoments.view.NineGridLayout
             android:id="@+id/layout_nine_grid"
+            app:sapcing="4dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            app:sapcing="4dp" />
+            android:layout_marginTop="8dp" />
 
 
         <cn.bluemobi.dylan.wechatmoments.view.MyListView
@@ -50,11 +62,12 @@
             android:layout_height="wrap_content">
 
         </cn.bluemobi.dylan.wechatmoments.view.MyListView>
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:textColor="@color/topbg"
-            android:text="10分钟前" />
+            android:text="10分钟前"
+            android:textColor="@color/topbg" />
     </LinearLayout>
 </LinearLayout>

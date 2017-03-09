@@ -3,6 +3,7 @@ package cn.bluemobi.dylan.wechatmoments.entity;
 import java.util.List;
 
 /**
+ * 朋友圈列表实体
  * Created by yuandl on 2017-03-08.
  */
 

@@ -8,7 +8,6 @@ import android.util.AttributeSet;
 import android.widget.ListView;
 
 /**
- * File_name com.dy.logs.mp.ui.MyListView
  *
  * @author linglongxin24
  */
