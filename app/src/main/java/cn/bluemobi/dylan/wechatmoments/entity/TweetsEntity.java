@@ -1,4 +1,4 @@
-package cn.bluemobi.dylan.wechatmoments;
+package cn.bluemobi.dylan.wechatmoments.entity;
 
 import java.util.List;
 
@@ -19,9 +19,6 @@ public class TweetsEntity {
 
     private String content;
     private SenderEntity sender;
-    private String error;
-    @com.google.gson.annotations.SerializedName("unknown error")
-    private String _$UnknownError245; // FIXME check this code
     private List<ImagesEntity> images;
     private List<CommentsEntity> comments;
 
@@ -39,22 +36,6 @@ public class TweetsEntity {
 
     public void setSender(SenderEntity sender) {
         this.sender = sender;
-    }
-
-    public String getError() {
-        return error;
-    }
-
-    public void setError(String error) {
-        this.error = error;
-    }
-
-    public String get_$UnknownError245() {
-        return _$UnknownError245;
-    }
-
-    public void set_$UnknownError245(String _$UnknownError245) {
-        this._$UnknownError245 = _$UnknownError245;
     }
 
     public List<ImagesEntity> getImages() {
@@ -192,8 +173,8 @@ public class TweetsEntity {
         return "TweetsEntity{" +
                 "content='" + content + '\'' +
                 ", sender=" + sender +
-                ", error='" + error + '\'' +
-                ", _$UnknownError245='" + _$UnknownError245 + '\'' +
+//                ", error='" + error + '\'' +
+//                ", _$UnknownError245='" + _$UnknownError245 + '\'' +
                 ", images=" + images +
                 ", comments=" + comments +
                 '}';
