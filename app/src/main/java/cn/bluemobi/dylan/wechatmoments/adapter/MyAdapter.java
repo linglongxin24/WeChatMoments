@@ -91,7 +91,7 @@ public class MyAdapter extends BaseAdapter {
             viewHolder.tvcontent.setVisibility(View.VISIBLE);
             viewHolder.tvcontent.setText(item.getContent());
 
-add            int state = mTextStateList.get(position, STATE_UNKNOW);
+            int state = mTextStateList.get(position, STATE_UNKNOW);
 //        如果该itme是第一次初始化，则取获取文本的行数
             if (state == STATE_UNKNOW) {
                 viewHolder.tvcontent.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
