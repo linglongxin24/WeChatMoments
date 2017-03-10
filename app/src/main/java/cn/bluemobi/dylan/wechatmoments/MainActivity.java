@@ -35,6 +35,9 @@ import rx.schedulers.Schedulers;
 
 import static cn.bluemobi.dylan.wechatmoments.ApiService.baseUrl;
 
+/**
+ * 朋友圈主页
+ */
 public class MainActivity extends AppCompatActivity {
     /**
      * HTTP请求LOG
@@ -106,13 +109,15 @@ public class MainActivity extends AppCompatActivity {
      * 初始化网络请求
      */
     private void initRetrofit() {
-        OkHttpClient okHttpClient = new OkHttpClient.Builder().connectTimeout(1, TimeUnit.MINUTES).addInterceptor(new HttpLoggingInterceptor(new HttpLoggingInterceptor.Logger() {
-            @Override
-            public void log(String message) {
-                Log.d(TAG, "OkHttp====message " + message);
-            }
+        OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                .connectTimeout(3, TimeUnit.MINUTES)
+                .addInterceptor(new HttpLoggingInterceptor(new HttpLoggingInterceptor.Logger() {
+                    @Override
+                    public void log(String message) {
+                        Log.d(TAG, "OkHttp====message " + message);
+                    }
 
-        }).setLevel(HttpLoggingInterceptor.Level.BODY)).build();
+                }).setLevel(HttpLoggingInterceptor.Level.BODY)).build();
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(baseUrl)
@@ -170,7 +175,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
     public void loadOnFinish() {
         refreshLayout.finishRefreshing();
         refreshLayout.finishLoadmore();
