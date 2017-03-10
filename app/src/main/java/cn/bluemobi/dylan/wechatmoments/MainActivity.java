@@ -37,6 +37,9 @@ import static cn.bluemobi.dylan.wechatmoments.ApiService.baseUrl;
 
 /**
  * 朋友圈主页
+ * Created by yuandl on 2017-03-08.
+ * email:13468857714@qq.com
+ * phone:13468857714
  */
 public class MainActivity extends AppCompatActivity {
     /**
@@ -175,6 +178,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
     public void loadOnFinish() {
         refreshLayout.finishRefreshing();
         refreshLayout.finishLoadmore();

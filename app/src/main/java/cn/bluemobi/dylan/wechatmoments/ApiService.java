@@ -10,6 +10,8 @@ import rx.Observable;
 /**
  * 接口API
  * Created by yuandl on 2017-03-08.
+ * email:13468857714@qq.com
+ * phone:13468857714
  */
 
 public interface ApiService {
